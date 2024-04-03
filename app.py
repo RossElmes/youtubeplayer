@@ -1,16 +1,97 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask,flash,render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-import  models
+from models import User, db
 import uuid
 import psycopg2
 from sqlalchemy import create_engine,text
+from flask_login import (
+    LoginManager,
+    login_user,
+    logout_user,
+    login_required,
+    current_user,
+)
 
 app = Flask(__name__)
 app.config.from_object('config')
 
+login_manager = LoginManager(app)
+login_manager.login_view = "login_page"
+
+with app.app_context():
+    db.init_app(app)
+    db.create_all()
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 @app.route('/')
+def login():
+    return render_template("login.html")
+
+@app.route('/index.html')
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
+
+@app.route('/player')
+@login_required
+def player():
+    return render_template('player.html')
+
+@app.route("/register", methods=["GET"])
+def register_page():
+    return render_template("register.html")
+
+@app.route("/register", methods=["POST"])
+def register_action():
+    firstname = request.form["firstname"]
+    surname = request.form["surname"]
+    email = request.form["email"]
+    password = request.form["password"]
+    if User.query.filter_by(email=email).first():
+        flash(f"The username '{email}' is already taken")
+        return redirect(url_for("register_page"))
+
+    user = User(email=email, password=password,firstname=firstname,surname=surname)
+    db.session.add(user)
+    db.session.commit()
+    login_user(user)
+    flash(f"Welcome {firstname}!")
+    return redirect(url_for("index"))
+
+
+@app.route("/login", methods=["GET"])
+def login_page():
+    return render_template("login.html")
+
+
+@app.route("/login", methods=["POST"])
+def login_action():
+    email = request.form["email"]
+    password = request.form["password"]
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        flash(f"No such user '{email}'")
+        return redirect(url_for("login_page"))
+    if password != user.password:
+        flash(f"Invalid password for the user '{email}'")
+        return redirect(url_for("login_page"))
+    login_user(user)
+    flash(f"Welcome back, {email}!")
+    return redirect(url_for("index"))
+
+@app.route("/logout", methods=["GET"])
+@login_required
+def logout_page():
+    return render_template("logout.html")
+
+@app.route("/logout", methods=["POST"])
+@login_required
+def logout_action():
+    logout_user()
+    flash("You have been logged out")
+    return redirect(url_for("login"))  # TODO: Fix the 'next' functionality
 
 @app.route('/form', methods=['GET', 'POST'])
 def form():

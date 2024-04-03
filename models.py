@@ -5,10 +5,11 @@ from sqlalchemy import text
 
 db = SQLAlchemy()
 
-
 class User(UserMixin, db.Model):
     id = db.mapped_column(db.Integer, primary_key=True)
-    username = db.mapped_column(db.String(50), unique=True)
+    firstname = db.mapped_column(db.String(50))
+    surname = db.mapped_column(db.String(50))
+    email = db.mapped_column(db.String(50), unique=True)
     # SECURITY NOTE: Don't actually store passwords like this in a real system!
     password = db.mapped_column(db.String(80))
 

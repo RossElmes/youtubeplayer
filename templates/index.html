@@ -7,28 +7,15 @@
 </head>
 <body>
     <header>
-        <h1>Blog with Flask</h1>
+        <h1>Youtube Player App</h1>
         <nav class="navbar">
             <ul>
                 <li><a href="{{ url_for('index') }}">Home</a></li>
                 <li><a href="{{ url_for('form') }}">Match Details</a></li>
+                <li><a href="{{ url_for('player') }}">Player</a></li>
+                <li><a href="{{ url_for('logout_page') }}">Logout</a></li>
             </ul>
         </nav>
     </header>
-    <div id="player"></div>
-    <div>
-        <button class="mark-action" data-action="try">Try</button>
-        <button class="mark-action" data-action="scrum">Scrum</button>
-        <button class="mark-action" data-action="lineout">Lineout</button>
-    </div>
-    <div>
-        <button class="data_sync">Push to Database</button>
-    </div>
-    
-    <ul id="clips"></ul>
-    <ul id="timestamps"></ul>
-
-    <script src="https://www.youtube.com/iframe_api"></script>
-    <script src="{{ url_for('static',filename='script.js') }}"></script>
 </body>
 </html>

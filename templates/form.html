@@ -3,6 +3,16 @@
 <head>
     <title>Match Details Upload</title>
 </head>
+<header>
+    <h1>Youtube Player App</h1>
+    <nav class="navbar">
+        <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('form') }}">Match Details</a></li>
+            <li><a href="{{ url_for('player') }}">Player</a></li>
+        </ul>
+    </nav>
+</header>
 <body>
     <form action="/" method="post">
         <label for="youtube_link">YouTube Link:</label><br>
