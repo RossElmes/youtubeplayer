@@ -1,19 +1,34 @@
 // static/script.js
-let player;
-let timestamps = [];
-console.log(1000)
-
-function onYouTubeIframeAPIReady() {
-    const videoId = 'I3rKOd4b6Os'
-    player = new YT.Player('player', {
-        height: '390',
-        width: '640',
-        videoId: videoId
-    });
-}
 
 // Assuming 'player' is the div that contains the YouTube player
-const playerElement = document.getElementById('player');
+let playerElement = document.getElementById('player');
+let videoId = playerElement.getAttribute('data-video-id');
+let matchId = playerElement.getAttribute('data-match-id');
+
+let player;
+
+function onYouTubeIframeAPIReady() {
+player = new YT.Player('player', {
+    height: '390',
+    width: '640',
+    videoId: videoId,
+    events: {
+        'onReady': onPlayerReady,
+        'onStateChange': onPlayerStateChange
+    }
+});
+}
+
+function onPlayerReady(event) {
+event.target.playVideo();
+}
+
+function onPlayerStateChange(event) {
+if (event.data == YT.PlayerState.PLAYING) {
+    // Video is playing
+}
+}
+
 
 // Function to request full screen
 function requestFullScreen(element) {
@@ -37,8 +52,10 @@ function seekToTimestamp(timestamp) {
 // Function to mark an action and timestamp
 function markAction(action) {
     const currentTime = player.getCurrentTime();
-    timestamps.push({ action: action, time: currentTime });
+    let myuuid = crypto.randomUUID()
+    timestamps.push({ action: action, time: currentTime,browser_id:myuuid,match_id:matchId});
     updateClipsList();
+    console.log(timestamps)
 }
 
 // Function to update the list of clips
@@ -47,7 +64,7 @@ function updateClipsList() {
     clipsList.innerHTML = '';
     timestamps.forEach(timestamp => {
         const listItem = document.createElement('li');
-        listItem.textContent = `${timestamp.action} - ${timestamp.time.toFixed(2)}s`;
+        listItem.textContent = `${timestamp.code} - ${timestamp.time}s`;
         listItem.addEventListener('click', function() {
             seekToTimestamp(timestamp.time);
         });
@@ -66,25 +83,52 @@ document.querySelectorAll('.mark-action').forEach(button => {
 
 
 
-// Example function to send timestamps to the server
-function sendTimestampsToServer(timestamps) {
+function sendDataToFlask(data) {
     fetch('/timestamps', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ timestamps: timestamps, match_id:match_id})
+        body: JSON.stringify(data)
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to save timestamps');
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-        console.log(data.message);
+        console.log('Data sent to Flask:', data);
+        // Optionally handle the response from Flask
     })
     .catch(error => {
-        console.error(error.message);
+        console.error('Error sending data to Flask:', error);
+        // Optionally handle errors
     });
 }
+
+
+document.getElementById('saveButton').addEventListener('click', function() {
+    // Call the function to send data to Flask
+    body = JSON.stringify(timestamps)
+    console.log(body)
+    sendDataToFlask(timestamps);
+});
+
+
+
+// Construct the URL with the match ID as a query parameter
+let playerElement2 = document.getElementById('player');
+let matchId2 = playerElement2.getAttribute('data-match-id');
+let timestamps = []
+
+const url = `/api/clips?match_id=${matchId2}`;
+
+fetch(url)
+    .then(response => response.json())
+    .then(data => {
+        // Handle the received clips data
+        timestamps = data
+        updateClipsList(timestamps)
+
+    })
+    .catch(error => {
+        console.error('Error fetching clips data:', error);
+    });
+
+

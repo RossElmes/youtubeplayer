@@ -8,37 +8,28 @@
     <nav class="navbar">
         <ul>
             <li><a href="{{ url_for('index') }}">Home</a></li>
-            <li><a href="{{ url_for('form') }}">Match Details</a></li>
-            <li><a href="{{ url_for('player') }}">Player</a></li>
+            <li><a href="{{ url_for('form_page') }}">Match Details</a></li>
         </ul>
     </nav>
 </header>
 <body>
-    <form action="/" method="post">
+    <form action="{{ url_for('form_action') }}" method="post">
         <label for="youtube_link">YouTube Link:</label><br>
         <input type="text" id="youtube_link" name="youtube_link" required><br>
-
         <label for="venue">Venue:</label><br>
         <input type="text" id="venue" name="venue" required><br>
-
         <label for="home_team">Home Team:</label><br>
         <input type="text" id="home_team" name="home_team" required><br>
-
         <label for="away_team">Away Team:</label><br>
         <input type="text" id="away_team" name="away_team" required><br>
-
         <label for="home_team_score">Home Team Score:</label><br>
         <input type="number" id="home_team_score" name="home_team_score" required><br>
-
+        <label for="competition">Competition:</label><br>
+        <input type="text" id="=competition" name="competition" required><br>
         <label for="away_team_score">Away Team Score:</label><br>
         <input type="number" id="away_team_score" name="away_team_score" required><br>
-
-        <label for="uploaded_by">Uploaded By:</label><br>
-        <input type="text" id="uploaded_by" name="uploaded_by" required><br>
-
         <label for="date_of_match">Date of Match:</label><br>
         <input type="date" id="date_of_match" name="date_of_match" required><br>
-
         <input type="submit" value="Submit">
     </form>
 </body>

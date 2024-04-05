@@ -11,11 +11,15 @@
         <nav class="navbar">
             <ul>
                 <li><a href="{{ url_for('index') }}">Home</a></li>
-                <li><a href="{{ url_for('form') }}">Match Details</a></li>
-                <li><a href="{{ url_for('player') }}">Player</a></li>
+                <li><a href="{{ url_for('form_page') }}">Match Details</a></li>
                 <li><a href="{{ url_for('logout_page') }}">Logout</a></li>
             </ul>
         </nav>
     </header>
+    <ul>
+        {% for match in match_details %}
+            <li><a href="{{url_for('player', matchid=match.id)}}">{{match.videoid}}</a></li>
+        {% endfor %}
+    </ul>
 </body>
 </html>

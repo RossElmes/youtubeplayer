@@ -5,31 +5,28 @@
     <meta charset="UTF-8">
     <title>YouTube Timestamp Marker</title>
 </head>
+<header>
+    <h1>Youtube Player App</h1>
+    <nav class="navbar">
+        <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('form_page') }}">Match Details</a></li>
+        </ul>
+    </nav>
+</header>
 <body>
-    <header>
-        <h1>Youtube Player App</h1>
-        <nav class="navbar">
-            <ul>
-                <li><a href="{{ url_for('index') }}">Home</a></li>
-                <li><a href="{{ url_for('form') }}">Match Details</a></li>
-                <li><a href="{{ url_for('player') }}">Player</a></li>
-            </ul>
-        </nav>
-    </header>
-    <div id="player"></div>
+    <div id="player" data-video-id="{{match.videoid}}" data-match-id="{{match.id}}"></div>
     <div>
         <button class="mark-action" data-action="try">Try</button>
         <button class="mark-action" data-action="scrum">Scrum</button>
         <button class="mark-action" data-action="lineout">Lineout</button>
+        <button id="saveButton" data-match-id="{{match.videoid}}">Save Timestamps</button>
     </div>
-    <div>
-        <button class="data_sync">Push to Database</button>
-    </div>
-    
     <ul id="clips"></ul>
-    <ul id="timestamps"></ul>
-
+    <ul id="timestamps">
+    </ul>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="{{ url_for('static',filename='script.js') }}"></script>
+    <script src="{{ url_for('static',filename='player.js') }}"></script>
 </body>
 </html>

@@ -1,6 +1,7 @@
-from flask import Flask,flash,render_template, request, redirect, url_for
+from flask import Flask,flash,render_template, request, redirect, url_for,jsonify
+import json
 from flask_sqlalchemy import SQLAlchemy
-from models import User, db
+from models import User, db,MatchDetails,MatchClips
 import uuid
 import psycopg2
 from sqlalchemy import create_engine,text
@@ -31,13 +32,31 @@ def login():
     return render_template("login.html")
 
 @app.route('/index.html')
-def index():
-    return render_template("index.html")
-
-@app.route('/player')
 @login_required
-def player():
-    return render_template('player.html')
+def index():
+    match_details= MatchDetails.query.filter_by(author_id=current_user.id).all()
+    return render_template("index.html",match_details=match_details)
+
+@app.route('/api/clips')
+def get_clips():
+    match_id = request.args.get('match_id')
+    # Fetch clips data from the database based on the match ID
+    match_clips = MatchClips.query.filter_by(match_id = match_id).all()
+    json_data = json.dumps([item.serialize() for item in match_clips])
+    #Return the data as JSON
+    return json_data
+
+
+@app.route('/player/<matchid>')
+@login_required
+def player(matchid):
+    match = MatchDetails.query.get_or_404(matchid)
+    return render_template('player.html',match=match)
+
+# @app.route('/player')
+# @login_required
+# def player():
+#     return render_template('player.html')
 
 @app.route("/register", methods=["GET"])
 def register_page():
@@ -78,6 +97,7 @@ def login_action():
         flash(f"Invalid password for the user '{email}'")
         return redirect(url_for("login_page"))
     login_user(user)
+    print(user.id)
     flash(f"Welcome back, {email}!")
     return redirect(url_for("index"))
 
@@ -93,73 +113,74 @@ def logout_action():
     flash("You have been logged out")
     return redirect(url_for("login"))  # TODO: Fix the 'next' functionality
 
-@app.route('/form', methods=['GET', 'POST'])
-def form():
-    if request.method == 'POST':
-        # Generate a unique ID
-        unique_id = str(uuid.uuid4())
-        youtube_link = request.form.get('youtube_link')
-        videoid = extract_video_id(youtube_link)
-        venue = request.form.get('venue')
-        home_team = request.form.get('home_team')
-        away_team = request.form.get('away_team')
-        home_team_score = request.form.get('home_team_score')
-        away_team_score = request.form.get('away_team_score')
-        uploaded_by = request.form.get('uploaded_by')
-        date_of_match = request.form.get('date_of_match')
 
-        # # Assuming redirection for simplicity
-        # return redirect(url_for('showdetails', unique_id=unique_id, youtube_link=youtube_link, venue=venue,
-        #                         home_team=home_team, away_team=away_team, home_team_score=home_team_score,
-        #                         away_team_score=away_team_score, uploaded_by=uploaded_by, date_of_match=date_of_match,
-        #                         videoid=videoid))
+@app.route("/form", methods=["GET"])
+@login_required
+def form_page():
+    return render_template("form.html")
 
-    # If it's a GET request, render the upload form
-    return render_template('form.html')
 
-@app.route('/showdetails')
-def showdetails():
-    # Extract query parameters
-    details = {
-        'unique_id': request.args.get('unique_id'),
-        'youtube_link': request.args.get('youtube_link'),
-        'venue': request.args.get('venue'),
-        'home_team': request.args.get('home_team'),
-        'away_team': request.args.get('away_team'),
-        'home_team_score': request.args.get('home_team_score'),
-        'away_team_score': request.args.get('away_team_score'),
-        'uploaded_by': request.args.get('uploaded_by'),
-        'date_of_match': request.args.get('date_of_match'),
-        'videoid':request.args.get('videoid')
-    }
-    return render_template('details.html', details=details)
-
-@app.route('/play', methods=['POST'])
-def play_video():
+@app.route("/form", methods=["POST"])
+@login_required
+def form_action():
     youtube_link = request.form['youtube_link']
-    video_id = extract_video_id(youtube_link)  # You'll need to implement this function
-    return render_template('index.html', video_id=video_id)
+    videoid = extract_video_id(youtube_link)
+    venue = request.form['venue']
+    home_team = request.form['home_team']
+    away_team = request.form['away_team']
+    home_team_score = request.form['home_team_score']
+    away_team_score = request.form['away_team_score']
+    match_date =  request.form['date_of_match']
+    competition = request.form['competition']
+    author=current_user
+
+    print(type(home_team_score))
+
+    match_detail = MatchDetails(
+        youtube_link = youtube_link,
+        videoid = videoid,
+        venue = venue,
+        home_team = home_team,
+        away_team = away_team,
+        home_score = home_team_score,
+        away_score = away_team_score,
+        match_date =  match_date,
+        competition = competition,
+        author=current_user,
+    )
+
+    db.session.add(match_detail)
+    db.session.commit()
+    return redirect(url_for("index"))
+
+
+# @app.route('/play', methods=['POST'])
+# def play_video():
+#     youtube_link = request.form['youtube_link']
+#     video_id = extract_video_id(youtube_link)  # You'll need to implement this function
+#     return render_template('index.html', video_id=video_id)
 
 
 # Your Flask route for processing timestamps
 @app.route('/timestamps', methods=['POST'])
 def save_timestamps():
-    new_timestamps = request.json.get('timestamps')
-    existing_timestamps = Timestamp.query.all()
+
+    existing_brower_id = []
+    new_timestamps = request.json
+    print(new_timestamps)
+    existing_timestamps = MatchClips.query.all()
+    for clip in existing_timestamps:
+        existing_brower_id.append(clip.browser_id)
     
-    # Extract existing timestamps from the database
-    existing_timestamp_values = [timestamp.timestamp for timestamp in existing_timestamps]
-    
-    # Filter out duplicate timestamps
-    unique_new_timestamps = [timestamp for timestamp in new_timestamps if timestamp not in existing_timestamp_values]
-    
-    # Insert the unique new timestamps into the database
-    for timestamp_value in unique_new_timestamps:
-        db_timestamp = Timestamp(timestamp=timestamp_value)
-        db.session.add(db_timestamp)
+    unique_new_timestamps = [item for item in new_timestamps if item['browser_id'] not in existing_brower_id]
+
+    #Insert the unique new timestamps into the database
+    for clip in unique_new_timestamps:
+        db_newclip = MatchClips(code=clip['action'],timestamp=clip['time'],browser_id=clip['browser_id'],match_id = clip['match_id'])
+        db.session.add(db_newclip)
     db.session.commit()
     
-    return jsonify({'message': 'Timestamps saved successfully'}), 200
+    return jsonify({'message': 'Timestamps saved successfully'})
 
 
 
