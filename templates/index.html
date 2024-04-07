@@ -4,22 +4,121 @@
 <head>
     <meta charset="UTF-8">
     <title>YouTube Timestamp Marker</title>
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">\ -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #0056b3; /* Darker blue for more contrast */
+            color: #fff;
+            padding: 10px 20px; /* Increased horizontal padding for more breathing space */
+            display: flex; /* Using flexbox for alignment */
+            justify-content: space-between; /* Space between logo and nav items */
+            align-items: center; /* Center items vertically */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Soft shadow for depth */
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 15px; /* Add padding for clickable area */
+            transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+        }
+
+        .navbar a:hover {
+            background-color: rgba(255,255,255,0.2); /* Subtle hover effect */
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 1.2em; /* Slightly larger logo text */
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 10px; /* Space between nav items */
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background-color: #f0f0f0;
+            padding: 10px; /* Smaller padding */
+            margin-bottom: 10px; /* Smaller margin */
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            border-top: 3px solid #007bff; /* Colorful top border */
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #007bff; /* Title color */
+        }
+
+        .card p {
+            margin-bottom: 3px; /* Smaller margin */
+            color: #333; /* Text color */
+        }
+
+        .match-link {
+            text-align: center;
+            margin-top: 5px; /* Smaller margin */
+        }
+
+        .match-link a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .match-link a:hover {
+            color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Youtube Player App</h1>
-        <nav class="navbar">
-            <ul>
-                <li><a href="{{ url_for('index') }}">Home</a></li>
-                <li><a href="{{ url_for('form_page') }}">Match Details</a></li>
-                <li><a href="{{ url_for('logout_page') }}">Logout</a></li>
-            </ul>
+    <header class="navbar">
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('form_page') }}">Match Details</a>
+            <a href="{{ url_for('logout_page') }}">Logout</a>
         </nav>
     </header>
-    <ul>
+    <div class="container">
+    <div>
         {% for match in match_details %}
-            <li><a href="{{url_for('player', matchid=match.id)}}">{{match.videoid}}</a></li>
+        <div class="card">
+            <h3>{{ match.home_team }} vs {{ match.away_team }}</h3>
+            <div class="'match-link">
+                <a href="{{url_for('player', matchid=match.id)}}">View Match</a>
+            </div>
+            <p>Venue: {{ match.venue }}</p>
+            <p>Competiton: {{ match.competition }}</p>
+            <p>Home Team: {{ match.home_team }}</p>
+            <p>Away Team: {{ match.away_team }}</p>
+            <p>Home Team Score: {{ match.home_score }}</p>
+            <p>Away Team Score: {{ match.away_score }}</p>
+            <p>Date of Match: {{ match.match_date }}</p>
+        </div>
         {% endfor %}
-    </ul>
+    </div> 
 </body>
 </html>

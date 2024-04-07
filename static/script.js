@@ -1,9 +1,8 @@
-// static/script.js
-
 // Assuming 'player' is the div that contains the YouTube player
 let playerElement = document.getElementById('player');
 let videoId = playerElement.getAttribute('data-video-id');
 let matchId = playerElement.getAttribute('data-match-id');
+let timestamps = []
 
 let player;
 
@@ -53,9 +52,10 @@ function seekToTimestamp(timestamp) {
 function markAction(action) {
     const currentTime = player.getCurrentTime();
     let myuuid = crypto.randomUUID()
-    timestamps.push({ action: action, time: currentTime,browser_id:myuuid,match_id:matchId});
+    clip = {code:action,time:currentTime,browser_id:myuuid,match_id:matchId}
+    sendDataToFlask(clip)
+    timestamps.push({ code: action, time: currentTime,browser_id:myuuid,match_id:matchId});
     updateClipsList();
-    console.log(timestamps)
 }
 
 // Function to update the list of clips
@@ -63,11 +63,33 @@ function updateClipsList() {
     const clipsList = document.getElementById('clips');
     clipsList.innerHTML = '';
     timestamps.forEach(timestamp => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${timestamp.code} - ${timestamp.time}s`;
-        listItem.addEventListener('click', function() {
+        const listItem = document.createElement('div');
+        listItem.setAttribute('class','clip-item')
+        // Create a new button element
+        const del_button = document.createElement('button');
+        del_button.textContent = 'Delete Clips'
+        del_button.setAttribute('class','clip-btn delete')
+
+        // Add event listener to the button if needed
+        del_button.addEventListener('click', () => {
+            deleteclip(timestamp.browser_id)
+            del_button.parentNode.remove();
+            console.log('Delete Clip')
+        });
+
+
+        const seekto_button = document.createElement('button');
+        seekto_button.textContent = 'Seek to Clip'
+        seekto_button.setAttribute('class','clip-btn seek-to')
+
+        seekto_button.addEventListener('click', function() {
             seekToTimestamp(timestamp.time);
         });
+
+        listItem.textContent = `${timestamp.code} - ${parseFloat(timestamp.time).toFixed(0)}s`;
+        listItem.appendChild(seekto_button)
+        listItem.appendChild(del_button)
+
         clipsList.appendChild(listItem);
     });
 }
@@ -103,21 +125,9 @@ function sendDataToFlask(data) {
 }
 
 
-document.getElementById('saveButton').addEventListener('click', function() {
-    // Call the function to send data to Flask
-    body = JSON.stringify(timestamps)
-    console.log(body)
-    sendDataToFlask(timestamps);
-});
 
 
-
-// Construct the URL with the match ID as a query parameter
-let playerElement2 = document.getElementById('player');
-let matchId2 = playerElement2.getAttribute('data-match-id');
-let timestamps = []
-
-const url = `/api/clips?match_id=${matchId2}`;
+const url = `/api/clips?match_id=${matchId}`;
 
 fetch(url)
     .then(response => response.json())
@@ -131,4 +141,34 @@ fetch(url)
         console.error('Error fetching clips data:', error);
     });
 
+
+
+// Function to delete timestamp from array
+function deleteTimestamp(browserId) {
+    const index = timestamps.findIndex(timestamp => timestamp.browser_id === browserId);
+    if (index !== -1) {
+        timestamps.splice(index, 1); // Remove the object at the found index
+        console.log(`Timestamp with browser_id ${browserId} deleted`);
+        console.log(timestamps)
+    }
+}
+
+function deleteclip(browser_id) {
+
+    const url = `/api/deleteclip?browser_id=${browser_id}`;
+
+    fetch(url,{
+        method:'DELETE'
+    })
+    .then(response => {
+        if(response.ok){
+            console.log(`Match clip with ID ${browser_id} deleted successfully`);
+            deleteTimestamp(browser_id)
+        }else {
+            console.error(`Failed to delete match clip with ID ${browser_id}`);
+        }
+    }) .catch(error => {
+            console.error('Error fetching clips data:', error);
+        });
+}
 

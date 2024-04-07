@@ -46,6 +46,16 @@ def get_clips():
     #Return the data as JSON
     return json_data
 
+@app.route('/api/deleteclip', methods=['DELETE'])
+def delete_clip():
+    browser_id = request.args.get('browser_id')
+    # Fetch clips data from the database based on the match ID
+    clips = MatchClips.query.filter_by(browser_id = browser_id).first()
+    db.session.delete(clips)
+    db.session.commit()
+    return  jsonify({"message": f"Match clip with ID {browser_id} deleted successfully"})
+
+
 
 @app.route('/player/<matchid>')
 @login_required
@@ -154,33 +164,19 @@ def form_action():
     return redirect(url_for("index"))
 
 
-# @app.route('/play', methods=['POST'])
-# def play_video():
-#     youtube_link = request.form['youtube_link']
-#     video_id = extract_video_id(youtube_link)  # You'll need to implement this function
-#     return render_template('index.html', video_id=video_id)
-
-
 # Your Flask route for processing timestamps
 @app.route('/timestamps', methods=['POST'])
 def save_timestamps():
 
     existing_brower_id = []
-    new_timestamps = request.json
-    print(new_timestamps)
-    existing_timestamps = MatchClips.query.all()
-    for clip in existing_timestamps:
-        existing_brower_id.append(clip.browser_id)
-    
-    unique_new_timestamps = [item for item in new_timestamps if item['browser_id'] not in existing_brower_id]
-
-    #Insert the unique new timestamps into the database
-    for clip in unique_new_timestamps:
-        db_newclip = MatchClips(code=clip['action'],timestamp=clip['time'],browser_id=clip['browser_id'],match_id = clip['match_id'])
-        db.session.add(db_newclip)
+    clip = request.json
+    db_newclip = MatchClips(code=clip['code'],timestamp=clip['time'],browser_id=clip['browser_id'],match_id = clip['match_id'])
+    db.session.add(db_newclip)
     db.session.commit()
     
     return jsonify({'message': 'Timestamps saved successfully'})
+
+
 
 
 
