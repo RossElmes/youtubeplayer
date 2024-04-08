@@ -1,10 +1,10 @@
 # Rugby Video Analyis Application
 
-(App)[https://youtubeplayer-app.onrender.com/]
-Code on [GIT](https://github.com/RossElmes/youtubeplayer)  
-Dummy User: johndoe@gmail.com
-Dummy Password: password12345
-Dummy Unlisted Video: https://www.youtube.com/watch?v=zrpOyIhk1VQ&list=PLxX3BcKr3Cbftg3K8IP3kY0vmxT4Xbdjw&index=3 that can be used to test Match Details upload. 
+[App on Render] (https://youtubeplayer-app.onrender.com/)  
+Code on [GIT](https://github.com/RossElmes/youtubeplayer)    
+Dummy User: johndoe@gmail.com  
+Dummy Password: password12345  
+Dummy Unlisted Video: https://www.youtube.com/watch?v=zrpOyIhk1VQ&list=PLxX3BcKr3Cbftg3K8IP3kY0vmxT4Xbdjw&index=3 that can be used to test Match Details upload.  
 
 
 ## Background
@@ -66,12 +66,12 @@ Below are some further elements I'd like to create
 
 
 ## Checklist for Assignment 
-A Flask Env [x]  
-B Create Flask Application Files [x]
-C Create HTML Files [x]
+A Flask Env - [x]  
+B Create Flask Application Files - [x]
+C Create HTML Files - [x]
 D Apply CSS Styling [x]
-E Implement JavaScript Functionality [x]
-G Define Flask Routes and Render HTML Files [x] 
-H Integrate PostgrSQL Database with Flask [x] 
-I Test and Run the Flask Application [x]
-J Hosting the Web App on Render.com [x]
+E Implement JavaScript Functionality - [x]
+G Define Flask Routes and Render HTML Files - [x] 
+H Integrate PostgrSQL Database with Flask - [x] 
+I Test and Run the Flask Application - [x]
+J Hosting the Web App on Render.com - [x]
