@@ -1,6 +1,6 @@
 # Rugby Video Analyis Application
 
-[App on Render] (https://youtubeplayer-app.onrender.com/)  
+[App on Render](https://youtubeplayer-app.onrender.com/)  
 Code on [GIT](https://github.com/RossElmes/youtubeplayer)    
 Dummy User: johndoe@gmail.com  
 Dummy Password: password12345  
