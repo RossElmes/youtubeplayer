@@ -66,7 +66,7 @@ Below are some further elements I'd like to create
 
 
 ## Checklist for Assignment 
-A Flask Env - [x]    
+- [x] A Flask Env    
 B Create Flask Application Files - [x]  
 C Create HTML Files - [x]  
 D Apply CSS Styling [x]  
