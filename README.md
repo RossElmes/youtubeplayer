@@ -66,12 +66,12 @@ Below are some further elements I'd like to create
 
 
 ## Checklist for Assignment 
-- [x] A Flask Env    
-B Create Flask Application Files - [x]  
-C Create HTML Files - [x]  
-D Apply CSS Styling [x]  
-E Implement JavaScript Functionality - [x]  
-G Define Flask Routes and Render HTML Files - [x]   
-H Integrate PostgrSQL Database with Flask - [x]  
-I Test and Run the Flask Application - [x]  
-J Hosting the Web App on Render.com - [x]  
+- [x] A Flask Env     
+- [x] B Create Flask Application Files  
+- [x] C Create HTML Files  
+- [x] D Apply CSS Styling  
+- [x] E Implement JavaScript Functionality  
+- [x] G Define Flask Routes and Render HTML Files  
+- [x] H Integrate PostgrSQL Database with Flask  
+- [x] I Test and Run the Flask Application  
+- [x] J Hosting the Web App on Render.com  
