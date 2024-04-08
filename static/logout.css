@@ -1,0 +1,29 @@
+/* Logout Page Styling */
+.logout-container {
+    text-align: center;
+    margin-top: 50px;
+
+}
+
+.logout-container p {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #333;
+    /* Consistent text color */
+}
+
+.btn-logout {
+    background-color: #f44336;
+    /* Red */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-logout:hover {
+    background-color: #d32f2f;
+}

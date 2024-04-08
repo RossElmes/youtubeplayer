@@ -1,0 +1,85 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    background-color: #0056b3; /* Darker blue for more contrast */
+    color: #fff;
+    padding: 10px 20px; /* Increased horizontal padding for more breathing space */
+    display: flex; /* Using flexbox for alignment */
+    justify-content: space-between; /* Space between logo and nav items */
+    align-items: center; /* Center items vertically */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Soft shadow for depth */
+}
+
+.navbar a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 15px; /* Add padding for clickable area */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.navbar a:hover {
+    background-color: rgba(255,255,255,0.2); /* Subtle hover effect */
+}
+
+.logo {
+    font-weight: bold;
+    font-size: 1.2em; /* Slightly larger logo text */
+}
+
+.nav-items {
+    display: flex;
+    gap: 10px; /* Space between nav items */
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.card {
+    background-color: #f0f0f0;
+    padding: 10px; /* Smaller padding */
+    margin-bottom: 10px; /* Smaller margin */
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    border-top: 3px solid #007bff; /* Colorful top border */
+}
+
+.card h3 {
+    margin-top: 0;
+    color: #007bff; /* Title color */
+}
+
+.card p {
+    margin-bottom: 3px; /* Smaller margin */
+    color: #333; /* Text color */
+}
+
+.match-link {
+    text-align: center;
+    margin-top: 5px; /* Smaller margin */
+}
+
+.match-link a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.match-link a:hover {
+    color: #0056b3;
+}
