@@ -64,6 +64,11 @@ Below are some further elements I'd like to create
 - Create a export that anyone can download a CSV of all the data.  This is an important step.  Clip level data is something that sportscode doesn't offer cleanly. 
 - Work on the styling.  I've leanred that the design and styling of a website is not something that I am good and and not something I think I would want to work on.  I enjoy building the functionality of the app rather than the UI design.  However I need to be able to complete it to a basic standard to make apps functional and more appealing that if there was no styling. 
 
+## Known Issues
+- Player is dependant on the youtube api working.  Sometimes I think this gets tethered in the background
+- Alot of network traffic slows the player down 
+- When to player doesn't load go back to home page and re-enter the desired match.  Usually this fixes the issue
+
 
 ## Checklist for Assignment 
 - [x] A Flask Env     
